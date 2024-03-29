@@ -284,7 +284,7 @@ int TableMeta::deserialize(std::istream &is)
   const Json::Value &indexes_value = table_value[FIELD_INDEXES];
   if (!indexes_value.empty()) {
     if (!indexes_value.isArray()) {
-      LOG_ERROR("Invalid table meta. indexes is not array, json value=%s", fields_value.toStyledString().c_str());
+      LOG_ERROR("Invalid . indexes is not array, json value=%s", fields_value.toStyledString().c_str());
       return -1;
     }
     const int index_num = indexes_value.size();

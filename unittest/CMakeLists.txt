@@ -2,6 +2,7 @@
 MESSAGE("${CMAKE_COMMON_FLAGS}")
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src/observer)
+set(Gtest_DIR /usr/lib/x86_64-linux-gnu/pkgconfig/../..)
 
 find_package(GTest CONFIG REQUIRED)
 

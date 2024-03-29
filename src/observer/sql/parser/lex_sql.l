@@ -112,9 +112,11 @@ CHAR                                    RETURN_TOKEN(STRING_T);
 FLOAT                                   RETURN_TOKEN(FLOAT_T);
 LOAD                                    RETURN_TOKEN(LOAD);
 DATA                                    RETURN_TOKEN(DATA);
+DATE                                    RETURN_TOKEN(DATE_T)
 INFILE                                  RETURN_TOKEN(INFILE);
 EXPLAIN                                 RETURN_TOKEN(EXPLAIN);
 {ID}                                    yylval->string=strdup(yytext); RETURN_TOKEN(ID);
+{QUOTE}[0-9]+-[0-9]+-[0-9]+{QUOTE}      yylval->string=strdup(yytext); RETURN_TOKEN(DATE_STR)
 "("                                     RETURN_TOKEN(LBRACE);
 ")"                                     RETURN_TOKEN(RBRACE);
 
