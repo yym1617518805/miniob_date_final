@@ -40,30 +40,67 @@ AttrType attr_type_from_string(const char *s)
   return UNDEFINED;
 }
 
-void String_to_int(const char *date,int &inData){
-    int len=0;
-    int res=0;
-    while(date[len]!='\0'&&res<=10000000){
-      if(0<=date[len]-'0'&&9>=date[len]-'0'){
-        res*=10;
-        res+=date[len]-'0';
-      }
-      len++;
+void String_to_int(const char* date, int& inData) {
+    int len = 0;
+    int res = 0;
+    int year = 0;
+    int month = 0;
+    int day = 0;
+    int next = 0;
+    while (date[len] != '\0') {
+        if (date[len] == '-') {
+            next++;
+            len++;
+            continue;
+        }
+        if (next == 0) {
+            year *= 10;
+            year += date[len] - '0';
+            len++;
+            continue;
+        }
+        else if (next == 1) {
+            month *= 10;
+            month += date[len] - '0';
+            len++;
+            continue;
+        }
+        else if (next == 2) {
+            day *= 10;
+            day += date[len] - '0';
+            len++;
+            continue;
+        }
+        len += 100000;
     }
-    inData =res;
+    res = year * 100;
+    res += month;
+    res *= 100;
+    res += day;
+    inData = res;
 }
 
 void int_to_String(int intDate,std::string &strDate){
-    int cur= intDate/10000 ; 
+  int year=0;
+  int month=0;
+  int day=0;
+  int res=0;
+  year= intDate/10000 ; 
+  month=(intDate-year*10000)/100;
+  day=intDate%100;
+    
     std::stringstream ss;
-    ss << cur;
+    ss << year;
     ss<<'-';
-    intDate= intDate%10000;
-    cur= intDate/100;
-    ss << cur;
+    if(month<10){
+      ss<<res;
+    }
+    ss << month;
     ss<<'-';
-    intDate=intDate%100;
-    ss << intDate;
+    if(day<10){
+      ss<<res;
+    }
+    ss << day;
     strDate=ss.str();
 }
 
@@ -134,7 +171,7 @@ void Value::set_date(int val)
   int day=val%100;
 
 
-  if(year<=1969 || year>=2038){
+  if(year<=1969 || year>=2039){
     flag=false;
   }
 
@@ -192,8 +229,11 @@ if(flag){
   length_ = sizeof(val);
 }
 else{
-    attr_type_ = CHARS;
+    attr_type_ = UNDEFINED;
+    num_value_.date_value_ = val;
+    length_ = sizeof(0);
 }
+
 }
 
 void Value::set_float(float val)
@@ -400,6 +440,9 @@ int Value::get_date()const{
   switch(attr_type_){
     case DATES:{
         return  num_value_.date_value_;
+    }break;
+    case UNDEFINED:{
+      return 0;
     }break;
     default:{
       LOG_WARN("unknown data type. type=%d", attr_type_);
